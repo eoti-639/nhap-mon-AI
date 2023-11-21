@@ -1,8 +1,11 @@
 package Lab7;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import javax.swing.text.AsyncBoxView.ChildLocator;
 
 public class GA_NQueenAlgo {
 	public static final int POP_SIZE = 100;//Population size
@@ -22,20 +25,48 @@ public class GA_NQueenAlgo {
 	}
 	
 	public Node execute() {
-	// Enter your code here
-	return null;
+		initPopulation();
+		Node child = new Node();
+		int k = 0;
+		while(k++ < MAX_ITERATIONS) {
+			List<Node> newPopulation = new ArrayList<>();
+			for(int i =0; i < POP_SIZE; i++) {
+				Node x = getParentByRandomSelection();
+				Node y = getParentByRandomSelection();
+				child = reproduce(x, y);
+				if(rd.nextDouble() < MAX_ITERATIONS) {
+					mutate(child);
+				}
+				if(child.getH() == 0) {
+					return child;
+				}
+				newPopulation.add(child);
+			}// end for
+			population = newPopulation;
+		}
+		Collections.sort(population);
+	return population.get(0);
 	}
 	// Mutate an individual by selecting a random Queen and 
 	//move it to a random row.
 	public void mutate(Node node) {
-	// Enter your code here
-	
+		int i = rd.nextInt(Node.N);
+		int row = rd.nextInt(Node.N);
+		node.setRow(i, row);
 	}
 	
 	//Crossover x and y to reproduce a child
 	public Node reproduce(Node x, Node y) {
-	// Enter your code here
-	return null;
+		Node child = new Node();
+		int c = rd.nextInt(Node.N);
+		for(int i=0; i < c; i++) {
+			child.setRow(i, x.getRow(i));
+		}
+		
+		for(int i = c+1; i < Node.N; i++) {
+			child.setRow(i, y.getRow(i));
+		}
+	return child;
 	}
 	// Select K individuals from the population at random and 
 	//select the best out of these to become a parent.
@@ -45,7 +76,11 @@ public class GA_NQueenAlgo {
 	}
 	//Select a random parent from the population
 	public Node getParentByRandomSelection() {
-	// Enter your code here
-	return null;
+		Node parent = new Node();
+		int c = rd.nextInt(Node.N);
+		for(int i = 0; i < c; i++) {
+			parent = population.get(i);
+		}
+	return parent;
 	}
 }
